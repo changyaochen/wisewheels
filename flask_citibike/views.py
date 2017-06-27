@@ -15,6 +15,8 @@ import pandas as pd
 import psycopg2
 from bokeh.plotting import figure
 from bokeh.embed import components 
+import codecs
+
 
 from flask_citibike import models
 from flask_citibike import plots
@@ -156,7 +158,13 @@ def about():
 
 @app.route('/story', methods = ['get', 'post'])
 def story():
-    return render_template("story.html")
+    dname = os.path.dirname(os.path.abspath(__file__))
+    return render_template("story.html", 
+                           score_html = codecs.open(dname +
+                          "/templates/scores_data_story_v3.html", 'r').read(),
+                           neighborhood_html = codecs.open(dname +
+                          "/templates/station_in_neighbor.html", 'r').read()
+                          )
   
 
 
