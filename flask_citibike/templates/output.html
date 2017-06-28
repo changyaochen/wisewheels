@@ -131,6 +131,12 @@
           The input temperature is not valid, using default value of <b>{{temperature}}</b> instead. <br>
           {% else %}
           The temperature is: <b>{{temperature}}</b>. <br> 
+          {% endif %}
+          {% if PRCP > 0 %}
+          It is raining.<br>
+          {% endif %} 
+          {% if SNOW > 0 %}
+          It is snowing.<br>
           {% endif %} 
         </p>
       </div>

@@ -31,7 +31,7 @@ def prediction(age = 25, start_station = 'Franklin St & W Broadway',
   os.chdir(dname)
   
   data_folder = '/'.join(dname.split('/')[:-1]) + '/NYC_bikeshare/data'
-  df_stations = pd.read_csv(data_folder + '/NYC_bike_stations_v5.csv')
+  df_stations = pd.read_csv(data_folder + '/NYC_bike_stations_v7.csv')
 
   model_name = 'Random_Forest.pkl'
   
@@ -95,34 +95,47 @@ def prediction(age = 25, start_station = 'Franklin St & W Broadway',
   input_X['SNOW'] = SNOW
   print('The weather conditions are: ', TAVG, PRCP, SNOW)
   
-  ## process station distance
-  print('start station name is: {}'.format(start_station))
-  input_X['shortest_dist'] = \
-  df_stations[df_stations['name'] == start_station]['shortest_dist'].values
-  input_X['total_slots'] = \
-  df_stations[df_stations['name'] == start_station]['total_slots'].values
-  input_X['nearest_3'] = \
-  df_stations[df_stations['name'] == start_station]['nearest_3'].values
-  input_X['nearest_5'] = \
-  df_stations[df_stations['name'] == start_station]['nearest_5'].values
+  ## process station info
+  df_single = df_stations[df_stations['name'] == start_station]
+  df_single = df_single.drop(['id', 'name', 'latitude', 'longitude', 'neighborhood',
+       'dists_to_other_stations'], axis = 1)
+  df_single = df_single.reset_index(drop = True)
+  print('shape of df_single (should be 1 by sth): ',
+        df_single.shape)
   
-  ## process the pop and income
-  input_X['closest_pop'] = \
-  df_stations[df_stations['name'] == start_station]['closest_pop'].values
-  input_X['closest_income'] = \
-  df_stations[df_stations['name'] == start_station]['closest_income'].values
+  input_X = input_X.astype('float') # this is important!
+  for item in df_single.columns:
+    input_X[item] = df_single.ix[0, item]
+  #print(input_X)
+  #print('start station name is: {}'.format(start_station))
+
+#  input_X['shortest_dist'] = \
+#  df_stations[df_stations['name'] == start_station]['shortest_dist'].values
+#  input_X['total_slots'] = \
+#  df_stations[df_stations['name'] == start_station]['total_slots'].values
+#  input_X['nearest_3'] = \
+#  df_stations[df_stations['name'] == start_station]['nearest_3'].values
+#  input_X['nearest_5'] = \
+#  df_stations[df_stations['name'] == start_station]['nearest_5'].values
+#  
+#  ## process the pop and income
+#  input_X['closest_pop'] = \
+#  df_stations[df_stations['name'] == start_station]['closest_pop'].values
+#  input_X['closest_income'] = \
+#  df_stations[df_stations['name'] == start_station]['closest_income'].values
   
   ## check for input_X
   print(station_id, input_X[station_id])
   for item in input_X.index:
     if not item.startswith('start station id_'):
-      print('{}: {}'.format(item, input_X[item]))
+      #print('{}: {}'.format(item, input_X[item]))
+      pass
   
   if _debug:
     input_X = debug_input_X
     print('truth is:', debug_y)
   ## make the prediction
-  y_pred = clf.predict_proba(input_X.reshape(1, -1))
+  y_pred = clf.predict_proba(input_X)
   
   
   ## build the probility

@@ -181,11 +181,28 @@
                     </select>
                   </div> 
 
+                  <div class="row">
+                  <div class="col-md-3">
                   <div class="form-group">
                   <label for="temperature">Temperature (&#8451):</label>
                   <br>
                   <input type="text" id="temperature" name='temperature' placeholder="e.g. 15" style="font-size:11pt;">
                   </div>
+                </div>
+
+                  <div class="col-md-2">
+                  <label class="form-check-label">
+                  <input type="checkbox" class="form-check-input" id="rain" name="rain" value="rain">
+                  Rain
+                </label>
+                  <div></div>
+                  <label class="form-check-label">
+                  <input type="checkbox" class="form-check-input" id="snow" name="snow" value="snow">
+                  Snow
+                </label>
+
+                </div>
+              </div>
 
                         <div>
                           <button type="submit" class="btn btn-success btn-lg">Find the prediction!</button>
