@@ -12,7 +12,8 @@ import bokeh.models as bkm
 from bokeh.resources import CDN
 from bokeh.embed import file_html
 from bokeh.models import (
-    GMapPlot, GMapOptions, ColumnDataSource, Circle, DataRange1d, PanTool, WheelZoomTool, BoxSelectTool
+    GMapPlot, GMapOptions, ColumnDataSource, Circle, DataRange1d, PanTool, 
+    WheelZoomTool, BoxSelectTool,
 )
 from config import google_map_api_key
 
@@ -161,7 +162,7 @@ def plot_destination(start_station, end_neighborhoods, N = 3):
   plot.add_tools(hover2)
   plot.add_tools(hover3)
   
-  plot.add_tools(PanTool(), WheelZoomTool(), BoxSelectTool())
+  plot.add_tools(PanTool(), WheelZoomTool())
   bokeh_html = file_html(plot, CDN, "tmp")
   #print('df_for_plot:\n', df_for_plot)
   print('return the destination plot...')
@@ -193,16 +194,19 @@ def station_map(fill_alpha = 0.9, show_neighor = False):
       x_range=DataRange1d(), 
       y_range=DataRange1d(), 
       map_options=map_options,
-      api_key = google_map_api_key
+      api_key = google_map_api_key,
+      tools = [PanTool(), WheelZoomTool()],
   )
   # plot.title.text = 'Citibike stations'
   circle = Circle(x = 'long', y = 'lat', fill_color='red',
                  fill_alpha = fill_alpha, line_alpha = 0)
   plot.add_glyph(source, circle)
-  plot.add_tools(PanTool(), WheelZoomTool(), BoxSelectTool())
+#  plot.add_tools(PanTool(), WheelZoomTool())
   hover = bkm.HoverTool(tooltips=[('Station name','@name'), 
                                   ('Neighborhood', '@neighbor')])
   plot.add_tools(hover)
+  plot.toolbar.active_drag = 'auto'
+  plot.toolbar.active_scroll = WheelZoomTool()
   bokeh_html = file_html(plot, CDN, "tmp")
   print('return the station plot...')
   

@@ -16,6 +16,7 @@ import psycopg2
 from bokeh.plotting import figure
 from bokeh.embed import components 
 import codecs
+from flask_citibike import bin_packing
 
 
 from flask_citibike import models
@@ -189,4 +190,39 @@ def story():
                            cm_html = codecs.open(dname +
                           "/templates/confusion_matrix_rf.html", 'r').read()
                           )
+@app.route('/bin_packing', methods = ['get', 'post'])
+def bin_packing_input():    
+    return  render_template("bin_packing.html")
+
+@app.route('/bin_packing_output', methods = ['get', 'post'])
+def bin_packing_output():  
+    #nums = request.form['nums']  
+    default_nums = [1,2,2,3,6,7,9]
+    default_bin = 10
+    default_bin_flag, default_nums_flag = False, False
+    
+    nums = request.form['nums']
+    ## check for the invalid input  
+    try:
+      nums = [float(x) for x in nums.split(',')]
+    except ValueError:
+      default_nums_flag = True         
+    if default_nums_flag:
+      nums = default_nums
+    
+    width = request.form['bin']
+    try:
+      W = float(width)
+    except ValueError:
+      default_bin_flag = True         
+ 
+    W = max(default_bin, max(nums))
+
+    res1 = bin_packing.pack(nums, W = W, verbose = True)
+    res2 = bin_packing.pack_brute(nums, W, verbose = 1)
+    return  render_template("bin_packing_output.html",
+                            nums = nums,
+                            W = W,
+                            res1 = res1,
+                            res2 = res2)        
   
