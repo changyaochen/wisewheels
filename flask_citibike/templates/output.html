@@ -99,6 +99,15 @@
                 <li><a href="{{ url_for('prediction_input') }}">Home</a></li>
                 <li><a href="{{ url_for('story') }}">Data Story</a></li>
                 <li><a href="{{ url_for('about') }}">About Me</a></li>
+                <!-- dropdown navbar -->
+                <li class="dropdown">
+                  <a class="dropdown-toggle" data-toggle="dropdown" href="#">Fun
+                  <span class="caret"></span></a>
+                  <ul class="dropdown-menu">
+                    <li><a href="{{ url_for('bin_packing_input') }}">Bin packing</a></li>
+                  </ul>
+                </li>
+                <!-- end of dropdown navbar -->
                 
               </ul>
             </div><!--/.nav-collapse -->

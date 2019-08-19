@@ -13,9 +13,10 @@ from bokeh.resources import CDN
 from bokeh.embed import file_html
 from bokeh.models import (
     GMapPlot, GMapOptions, ColumnDataSource, Circle, DataRange1d, PanTool, 
-    WheelZoomTool, BoxSelectTool,
+    WheelZoomTool, BoxSelectTool, Range1d
 )
-from config import google_map_api_key
+# from config import google_map_api_key
+google_map_api_key = "AIzaSyAQRCMxY0k1nWkjv3CmQgzMFDZq7E-FI3E"
 
 def plot_income_pop(output = 'income'):
   """
@@ -129,8 +130,8 @@ def plot_destination(start_station, end_neighborhoods, N = 3):
                             lng=df_start_station['longitude'].values[0], 
                             map_type="roadmap", zoom=13)
   plot = GMapPlot(
-      x_range=DataRange1d(), 
-      y_range=DataRange1d(), 
+      x_range=Range1d(), 
+      y_range=Range1d(), 
       map_options=map_options,
       api_key = google_map_api_key
   )
@@ -191,8 +192,8 @@ def station_map(fill_alpha = 0.9, show_neighor = False):
   map_options = GMapOptions(lat=40.75, lng=-73.95, 
                             map_type="roadmap", zoom=12)
   plot = GMapPlot(
-      x_range=DataRange1d(), 
-      y_range=DataRange1d(), 
+      x_range=Range1d(), 
+      y_range=Range1d(), 
       map_options=map_options,
       api_key = google_map_api_key,
       tools = [PanTool(), WheelZoomTool()],

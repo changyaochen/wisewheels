@@ -86,7 +86,7 @@
             </div>
             <div id="navbar" class="collapse navbar-collapse">
               <ul class="nav navbar-nav">
-                <li class="active"><a href="{{ url_for('prediction_input') }}">Home</a></li>
+                <li><a href="{{ url_for('prediction_input') }}">Home</a></li>
                 <li><a href="{{ url_for('story') }}">Data Story</a></li>
                 <li><a href="{{ url_for('about') }}">About Me</a></li>
                 <!-- dropdown navbar -->
@@ -105,129 +105,61 @@
         </nav>
         <br><br>
         <div class="container">
-        <div class="row">
-          <div class="col-md-5">
+          <div class="col-md-8">
           <div class="starter-template">
             <br><br>
-            <img src="/static/citibike_logo.png" alt="Citibike logo", width="30%" height="30%">
-            <h4>How it works:</h4>
-            <p>Provide some information about the rider, where and when he/she picks up the Citibike, I will predict which neighborhood he/she is going. <br></p>
+            <h4>Bin packing problem:</h4>
+            <p align="left">
+              This is for solving the 1D <a href="https://en.wikipedia.org/wiki/Bin_packing_problem" target=blank>bin packing problem</a>. The problem statement is: there is a list of 
+              <span style="font-family: courier; font-weight: bold; font-style: italic">N</span> 
+              numbers, representing the widths of 
+              <span style="font-family: courier; font-weight: bold; font-style: italic">N</span> 
+              different objects, ecah with width of 
+              <span style="font-family: courier; font-weight: bold; font-style: italic">N<sub>i</sub></span>. The goal is to fit all these 
+              <span style="font-family: courier; font-weight: bold; font-style: italic">N</span> objects to 
+              <span style="font-family: courier; font-weight: bold; font-style: italic">M</span> bins with fixed width of 
+              <span style="font-family: courier; font-weight: bold; font-style: italic">W</span>. 
+              <span style="font-family: courier; font-weight: bold; font-style: italic">W</span> is larger than the largest value of 
+              <span style="font-family: courier; font-weight: bold; font-style: italic">N<sub>i</sub></span>.
+              The goal is to find the minimal value of 
+              <span style="font-family: courier; font-weight: bold; font-style: italic">M</span>.<br></p>
           </div>
 
-
-          <div class = "container">
-            <form  action="/output" method="POST">
+            
             
             <div class="row">  
-            <div class="col-md-3">
-              <div class="form-group">
-                <label for="user_age">Rider's Age:</label>
-                <br>
-                <input type="text" id="user_age" name='user_age' placeholder="e.g. 25" style="font-size:11pt;">
-              </div>
+            <div class="col-md-12">
+              <p>The input widths are: {{nums}}.<br></p>
+              <p>Width of the bin is {{W}}.<br></p>
+              <p>=====<br></p>
+              <p>The number of shelves from First Fit Decrease algorithm is <strong>{{res1}}</strong>.<br></p>
+              <p>The shelves are:<br>
+                {% for s in shelves1 %}
+                <tr><td>{{ s.items }}, </td></tr>
+                {% endfor %}<br></p>
+              {% if exhaustive %}  
+                {% if res2 %}                
+                  <p><br>The number of shelves from exhaustive search is <strong>{{res2}}</strong>.<br></p>
+                  <p>The shelves are:<br>
+                    {% for s in shelves2 %}
+                    <tr><td>{{ s.items }}, </td></tr>
+                    {% endfor %}<br></p>
+                {% else %}
+                  <p><br>Exhaustive search reaches time limit.<br></p>
+                {% endif %}
+              {% endif %}
             </div>
 
-
-              <div class="col-md-2">
-              <div class="form-group">
-                <label for="user_gender">Rider's gender:</label>
-                <select class="form-control" id="user_gender" name="user_gender" style="width:auto">
-                  <option value="Male">Male</option>
-                  <option value="Female">Female</option>
-                  <option value="None_of_above">None of above</option>
-                </select>
-              </div>
-            </div>
             </div>
 
-
-                
-              <div class="form-group">
-                <label for="start_station">Start station:</label>
-                <select class="form-control" id="start_station" name="start_station" style="width:auto">
-                  {% for elem in stations:%}
-                    <option value="{{elem}}">{{elem}}</option>
-                  {% endfor %}
-                </select>
-              </div>
-
-
-                  <!-- Form code begins -->
-                  <div class="form-group"> <!-- Date input -->
-                    <label class="control-label" for="date">Pick up date:</label><br>
-                    <!--class="form-control"-->
-                    <input id="date" name="date" placeholder="MM/DD/YYY" type="text" />
+                  <form  action="/bin_packing" method="POST">
+                    <br>
+                  <div>
+                    <button type="submit" class="btn btn-success btn-lg">Back to input</button>
                   </div>
-                      
-
-                  <div class="form-group">
-                    <label for="hour">Pick up time, please round to the closest hour:</label>
-                    <select class="form-control" id="hour" name="hour" style="width:auto">
-                      <option value="0">0</option>
-                      <option value="1">1</option>
-                      <option value="2">2</option>
-                      <option value="3">3</option>
-                      <option value="4">4</option>
-                      <option value="5">5</option>
-                      <option value="6">6</option>
-                      <option value="7">7</option>
-                      <option value="8">8</option>
-                      <option value="9">9</option>
-                      <option value="10">10</option>
-                      <option value="11">11</option>
-                      <option value="12">12</option>
-                      <option value="13">13</option>
-                      <option value="14">14</option>
-                      <option value="15">15</option>
-                      <option value="16">16</option>
-                      <option value="17">17</option>
-                      <option value="18">18</option>
-                      <option value="19">19</option>
-                      <option value="20">20</option>
-                      <option value="21">21</option>
-                      <option value="22">22</option>
-                      <option value="23">23</option>                      
-                    </select>
-                  </div> 
-
-                  <div class="row">
-                  <div class="col-md-3">
-                  <div class="form-group">
-                  <label for="temperature">Temperature (&#8451):</label>
-                  <br>
-                  <input type="text" id="temperature" name='temperature' placeholder="e.g. 15" style="font-size:11pt;">
-                  </div>
-                </div>
-
-                  <div class="col-md-2">
-                  <label class="form-check-label">
-                  <input type="checkbox" class="form-check-input" id="rain" name="rain" value="rain">
-                  Rain
-                </label>
-                  <div></div>
-                  <label class="form-check-label">
-                  <input type="checkbox" class="form-check-input" id="snow" name="snow" value="snow">
-                  Snow
-                </label>
-
-                </div>
-              </div>
-
-                        <div>
-                          <button type="submit" class="btn btn-success btn-lg">Find the prediction!</button>
-                        </div>
                   </form>
                   </div>
-                </div>
-                <div class="col-md-5">
-                  <div class="container">
-                  <div class="starter-template">
-                    <br>
-                    <h4>Map of Citibike stations</h4>
-                    {{ bokeh_html|safe }}
-                  </div>
-                  </div>
-                </div>
+
 
 
 

@@ -86,7 +86,7 @@
             </div>
             <div id="navbar" class="collapse navbar-collapse">
               <ul class="nav navbar-nav">
-                <li class="active"><a href="{{ url_for('prediction_input') }}">Home</a></li>
+                <li><a href="{{ url_for('prediction_input') }}">Home</a></li>
                 <li><a href="{{ url_for('story') }}">Data Story</a></li>
                 <li><a href="{{ url_for('about') }}">About Me</a></li>
                 <!-- dropdown navbar -->
@@ -105,129 +105,58 @@
         </nav>
         <br><br>
         <div class="container">
-        <div class="row">
-          <div class="col-md-5">
+          <div class="col-md-8">
           <div class="starter-template">
             <br><br>
-            <img src="/static/citibike_logo.png" alt="Citibike logo", width="30%" height="30%">
-            <h4>How it works:</h4>
-            <p>Provide some information about the rider, where and when he/she picks up the Citibike, I will predict which neighborhood he/she is going. <br></p>
+            <h4>Bin packing problem:</h4>
+            <p align="left">
+              This is for solving the 1D <a href="https://en.wikipedia.org/wiki/Bin_packing_problem" target=blank>bin packing problem</a>. The problem statement is: there is a list of 
+              <span style="font-family: courier; font-weight: bold; font-style: italic">N</span> 
+              numbers, representing the widths of 
+              <span style="font-family: courier; font-weight: bold; font-style: italic">N</span> 
+              different objects, ecah with width of 
+              <span style="font-family: courier; font-weight: bold; font-style: italic">N<sub>i</sub></span>. The goal is to fit all these 
+              <span style="font-family: courier; font-weight: bold; font-style: italic">N</span> objects to 
+              <span style="font-family: courier; font-weight: bold; font-style: italic">M</span> bins with fixed width of 
+              <span style="font-family: courier; font-weight: bold; font-style: italic">W</span>. 
+              <span style="font-family: courier; font-weight: bold; font-style: italic">W</span> is larger than the largest value of 
+              <span style="font-family: courier; font-weight: bold; font-style: italic">N<sub>i</sub></span>.
+              The goal is to find the minimal value of 
+              <span style="font-family: courier; font-weight: bold; font-style: italic">M</span>.<br>
+              <br>
+              I will use both First Fit Decrease algorithm and exhaustive search to get the result. Please note that for First Fit Decrease algorithm, the time complexity is
+              <span style="font-family: courier; font-weight: bold; font-style: italic">O(N <span style='font-style:normal'>log</span>N)</span>.
+              But for exhaustive search, the time complexity is
+              <span style="font-family: courier; font-weight: bold; font-style: italic">O(N!)</span>. 
+              For 
+              <span style="font-family: courier; font-weight: bold; font-style: italic">N</span> 
+              = 10, it will take about 20 seconds to finish. Therefore, we will ignore exhaustive search with 
+              <span style="font-family: courier; font-weight: bold; font-style: italic">N</span> 
+              > 10.
+              <br><br>
+              For the sake of simplicit, we will limit ourselves to integer cases.
+            </p>
           </div>
 
-
-          <div class = "container">
-            <form  action="/output" method="POST">
-            
+            <form  action="/bin_packing_output" method="POST">
             <div class="row">  
-            <div class="col-md-3">
-              <div class="form-group">
-                <label for="user_age">Rider's Age:</label>
-                <br>
-                <input type="text" id="user_age" name='user_age' placeholder="e.g. 25" style="font-size:11pt;">
-              </div>
-            </div>
-
-
-              <div class="col-md-2">
-              <div class="form-group">
-                <label for="user_gender">Rider's gender:</label>
-                <select class="form-control" id="user_gender" name="user_gender" style="width:auto">
-                  <option value="Male">Male</option>
-                  <option value="Female">Female</option>
-                  <option value="None_of_above">None of above</option>
-                </select>
-              </div>
-            </div>
-            </div>
-
-
-                
-              <div class="form-group">
-                <label for="start_station">Start station:</label>
-                <select class="form-control" id="start_station" name="start_station" style="width:auto">
-                  {% for elem in stations:%}
-                    <option value="{{elem}}">{{elem}}</option>
-                  {% endfor %}
-                </select>
-              </div>
-
-
-                  <!-- Form code begins -->
-                  <div class="form-group"> <!-- Date input -->
-                    <label class="control-label" for="date">Pick up date:</label><br>
-                    <!--class="form-control"-->
-                    <input id="date" name="date" placeholder="MM/DD/YYY" type="text" />
-                  </div>
-                      
-
-                  <div class="form-group">
-                    <label for="hour">Pick up time, please round to the closest hour:</label>
-                    <select class="form-control" id="hour" name="hour" style="width:auto">
-                      <option value="0">0</option>
-                      <option value="1">1</option>
-                      <option value="2">2</option>
-                      <option value="3">3</option>
-                      <option value="4">4</option>
-                      <option value="5">5</option>
-                      <option value="6">6</option>
-                      <option value="7">7</option>
-                      <option value="8">8</option>
-                      <option value="9">9</option>
-                      <option value="10">10</option>
-                      <option value="11">11</option>
-                      <option value="12">12</option>
-                      <option value="13">13</option>
-                      <option value="14">14</option>
-                      <option value="15">15</option>
-                      <option value="16">16</option>
-                      <option value="17">17</option>
-                      <option value="18">18</option>
-                      <option value="19">19</option>
-                      <option value="20">20</option>
-                      <option value="21">21</option>
-                      <option value="22">22</option>
-                      <option value="23">23</option>                      
-                    </select>
-                  </div> 
-
-                  <div class="row">
-                  <div class="col-md-3">
-                  <div class="form-group">
-                  <label for="temperature">Temperature (&#8451):</label>
+            <div class="col-md-12 form-group row">
+                <div = class="col-md-12">
+                  <label for="nums">List of widths, seperated by comma:</label>
                   <br>
-                  <input type="text" id="temperature" name='temperature' placeholder="e.g. 15" style="font-size:11pt;">
-                  </div>
-                </div>
-
-                  <div class="col-md-2">
-                  <label class="form-check-label">
-                  <input type="checkbox" class="form-check-input" id="rain" name="rain" value="rain">
-                  Rain
-                </label>
-                  <div></div>
-                  <label class="form-check-label">
-                  <input type="checkbox" class="form-check-input" id="snow" name="snow" value="snow">
-                  Snow
-                </label>
-
-                </div>
-              </div>
-
-                        <div>
-                          <button type="submit" class="btn btn-success btn-lg">Find the prediction!</button>
-                        </div>
+                  <input class="col-md-12" type="text" id="nums" name='nums' placeholder="e.g. 1,2,2,3,6,7,9" style="font-size:11pt;">
+                  <br><br>
+                  <label for="width">Width of the bin, <span style="font-family: courier; font-weight: bold; font-style: italic">W</span> :</label>
+                  <br>
+                  <input class="col-md-5" type="text" id="bin" name='bin' placeholder="e.g. 10" style="font-size:11pt;">
+                  <br><br>
+                  <input class="form-check-input" type="checkbox" id="exhaustive" name="exhaustive" value="exhaustive">
+                  Exhaustive search </label>
+                  <br><br>
+                  <div><button type="submit" class="btn btn-success btn-lg">Submit</button></div>
                   </form>
                   </div>
-                </div>
-                <div class="col-md-5">
-                  <div class="container">
-                  <div class="starter-template">
-                    <br>
-                    <h4>Map of Citibike stations</h4>
-                    {{ bokeh_html|safe }}
-                  </div>
-                  </div>
-                </div>
+
 
 
 

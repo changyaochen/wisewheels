@@ -89,6 +89,15 @@
                 <li><a href="{{ url_for('prediction_input') }}">Home</a></li>
                 <li class="active"><a href="{{ url_for('story') }}">Data Story</a></li>
                 <li><a href="{{ url_for('about') }}">About Me</a></li>
+                <!-- dropdown navbar -->
+                <li class="dropdown">
+                  <a class="dropdown-toggle" data-toggle="dropdown" href="#">Fun
+                  <span class="caret"></span></a>
+                  <ul class="dropdown-menu">
+                    <li><a href="{{ url_for('bin_packing_input') }}">Bin packing</a></li>
+                  </ul>
+                </li>
+                <!-- end of dropdown navbar -->
                 
               </ul>
             </div><!--/.nav-collapse -->
@@ -196,7 +205,7 @@
               <b><a id="story2">Back story 2: the model with 99% accuracy.</a></b>
               <br><br>
 
-              For the fellows who have sit in my previous demos, they might be surprised by my claim of 99% accuracy of the model. That is right, <b>99%</b>, not 20%. I didn't pull this number out from my hat, I genuinely believe in it! Both the random forest and boosted trees give me the same answer. I tried different portions of the data, still holds! What makes it more believable is that, I can see the accuracies of the models gradually improve as I add more features in, that is like the ultimate feature engineering (what was the Wednesday of week 3, I then allow myself an 8-hour sleep that night, problem solved!). Look how smart I am! Despite warnings and doubts from Insight alums and staffs, I even came up with the explanation that, there are only 200,000 unique members riding those 10 million trips, and my model is able to identify their behavior very well. Almost convinced everyone, myself included. Not matter how extraordinary the claim is, I am in heaven. <br><br>
+              For the fellows who have sit in my previous demos, they might be surprised by my claim of 99% accuracy of the model. That is right, <b>99%</b>, not 20%. I didn't pull this number out from my hat, I genuinely believe in it! Both the random forest and boosted trees give me the same answer. I tried different portions of the data, still holds! What makes it more believable is that, I can see the accuracies of the models gradually improve as I add more features in, that is like the ultimate feature engineering (that was the Wednesday of week 3, I then allowed myself an 8-hour sleep that night, problem solved!). Look how smart I am! Despite warnings and doubts from Insight alums and staffs, I even came up with the explanation that, there are only 200,000 unique members riding those 10 million trips, and my model is able to identify their behavior very well. Almost convinced everyone, myself included. Not matter how extraordinary the claim is, I am in heaven. <br><br>
 
               Then on the flight back to Chicago, on the Friday of week 4, I found something doesn't add up: while putting drastically different input to the website, I always get similar results. I went into fully debugging mode, tracing one step back at a time, and finally I found the culprit: I made a mistake at the very beginning, when I am making the data set. Instead of merging two tables on the 'start station id' key, I merged them on the 'end station id' key. By doing so, some information about the answer is leaked to the features. Given the power of the appropriate models (I guess I can be proud of this part...), they will of course get the 99% accuracy - it should get 100% accuracy!<br><br>
 
