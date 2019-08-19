@@ -8,16 +8,11 @@ import os
 import codecs
 import logging
 import pandas as pd
-from flask import render_template, request, jsonify, abort
-from datetime import datetime
-from collections import OrderedDict
+from flask import render_template, request
 
 # from bokeh.plotting import figure
 # from bokeh.embed import components
 
-from .utils import (load_pkl_model, get_mojo_info,
-                    sklearn_backend_process,
-                    h2o_backend_process)
 from .config import log_file
 from flask_citibike import app, models, bin_packing, plots
 
@@ -231,7 +226,7 @@ def bin_packing_output():
         # do the exhaustive serach
         exhaustive = True
         res2, shelves2 = bin_packing.pack_brute(nums, W, verbose=2)
-    
+
     return render_template("bin_packing_output.html",
                            nums=nums,
                            W=W,
@@ -240,67 +235,3 @@ def bin_packing_output():
                            shelves1=shelves1,
                            shelves2=shelves2,
                            exhaustive=exhaustive)
-
-
-# ===== api test ====
-SKLEARN_MODEL_NAME = '38267011-model_fold_3.pkl'
-XGB_MODEL_NAME = '38324320-model_fold_3.pkl'
-MOJO_MODEL_NAME = 'H2OGBM_38331063_fold_3.zip'
-
-supported_backends = ('sklearn', 'xgb' 'h2o')
-model_mapping = {'sklearn': SKLEARN_MODEL_NAME,
-                 'xgb': XGB_MODEL_NAME,
-                 # 'h2o': MOJO_MODEL_NAME,
-                 }
-
-app.config["JSON_SORT_KEYS"] = False
-app.config['JSONIFY_PRETTYPRINT_REGULAR'] = True
-
-
-@app.route('/api', methods=['POST', 'GET'])
-def api():
-    """This is the endpoint of api calls."""
-
-    if request.method == 'POST':
-        try:  # we want json
-            payload = request.get_json(force=True)  # convert it to dict
-            data = payload['data']  # we need this key for data
-            try:  # backend model choices
-                backend = payload['backend']
-            except KeyError:
-                backend = 'sklearn'  # default option
-            model_name = model_mapping[backend]
-
-        except Exception as e:
-            print(e)
-            abort(400)
-
-        # handle different backends, sklearn and xgb should be the same
-        if backend == 'sklearn':
-            pred = sklearn_backend_process(model_name, data)
-        elif backend == 'xgb':
-            pred = sklearn_backend_process(model_name, data)
-        elif backend == 'h2o':
-            pred = h2o_backend_process(model_name, data)
-        else:
-            raise Exception('{} backend it not supported.'.format(backend))
-
-        return jsonify(pred)
-
-    else:  # GET, print some info about the model
-        all_model_info = OrderedDict()
-        for b in model_mapping:
-            model_info = OrderedDict()
-            model_info['model name'] = model_mapping[b]
-            if b in ('sklearn', 'xgb'):
-                _, feature_list, meta = load_pkl_model(model_mapping[b])
-            elif b in ('h2o',):
-                _, feature_list, meta = get_mojo_info(model_mapping[b])
-            else:
-                raise Exception('{} backend it not supported.'.format(b))
-            model_info['meta'] = meta
-            model_info['feature names'] = feature_list
-
-            all_model_info[b] = model_info
-
-        return jsonify(all_model_info)
