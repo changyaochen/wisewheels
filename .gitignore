@@ -1,8 +1,10 @@
+**/.DS_Store
 **/config.py
 **/*.pkl
 **/*.csv
 flask_citibike/models/
 flask_citibike/data/
+flask_citibike/logs/
 
 # Byte-compiled / optimized / DLL files
 **/__pycache__/
