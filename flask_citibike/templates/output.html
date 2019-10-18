@@ -105,10 +105,11 @@
                   <span class="caret"></span></a>
                   <ul class="dropdown-menu">
                     <li><a href="{{ url_for('bin_packing_input') }}">Bin packing</a></li>
+                    <li><a href="{{ url_for('egg_drop_input') }}">Egg drop problem</a></li>
                   </ul>
                 </li>
                 <!-- end of dropdown navbar -->
-                
+
               </ul>
             </div><!--/.nav-collapse -->
           </div>
@@ -122,14 +123,14 @@
         <br><br>
         <img src="/static/citibike_logo.png" alt="Citibike logo", width="30%" height="30%">
         <h4>Here are the inputs:</h4>
-        <p> 
+        <p>
           {% if default_age %}
           The input rider's age is not valid, using default value of <b>{{age}}</b> instead. <br>
           {% else %}
-          The rider's age is: <b>{{age}}</b>. <br> 
+          The rider's age is: <b>{{age}}</b>. <br>
           {% endif %}
           The rider's gender is: <b>{{gender}}</b>.<br>
-          {% if default_date %} 
+          {% if default_date %}
           The input pick up date is not valid, using the default value of <b>06/01/2016</b> instead.<br>
           {% else %}
           The pick up date is: <b>{{date}}</b>.<br>
@@ -139,17 +140,17 @@
           {% if default_temperature %}
           The input temperature is not valid, using default value of <b>{{temperature}}</b> instead. <br>
           {% else %}
-          The temperature is: <b>{{temperature}}</b>. <br> 
+          The temperature is: <b>{{temperature}}</b>. <br>
           {% endif %}
           {% if PRCP > 0 %}
           It is raining.<br>
-          {% endif %} 
+          {% endif %}
           {% if SNOW > 0 %}
           It is snowing.<br>
-          {% endif %} 
+          {% endif %}
         </p>
       </div>
-      
+
       <br>
       <h4> Here are the results:<br></h4>
       <p>The start station is marked in <font color="blue">blue</font>. The <font color="green">green</font> circles show the centroids of the top {{N}} most likely end-neighborhoods for this Citibike ride. The areas of the <font color="green">green</font> circles are proportional the probabilities.<br>
@@ -161,7 +162,7 @@
       {% endfor %}
       </table>
     </div>
-      
+
     <div class="col-md-5">
     <div class="container">
       <div class="starter-template">
@@ -174,10 +175,10 @@
 
     </div>
     </div><!-- /.container -->
-     
 
 
-    <!-- 
+
+    <!--
     <div class="container">
       <div class="starter-template">
         <h3>Another Result:</h3>
@@ -202,6 +203,6 @@
     <script src="../../dist/js/bootstrap.min.js"></script>
     <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
     <script src="../../assets/js/ie10-viewport-bug-workaround.js"></script>
-<script src="static/js/bootstrap.min.js"></script>  
+<script src="static/js/bootstrap.min.js"></script>
   </body>
 </html>

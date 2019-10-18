@@ -95,10 +95,11 @@
                   <span class="caret"></span></a>
                   <ul class="dropdown-menu">
                     <li><a href="{{ url_for('bin_packing_input') }}">Bin packing</a></li>
+                    <li><a href="{{ url_for('egg_drop_input') }}">Egg drop problem</a></li>
                   </ul>
                 </li>
                 <!-- end of dropdown navbar -->
-                
+
               </ul>
             </div><!--/.nav-collapse -->
           </div>
@@ -110,24 +111,24 @@
             <br><br>
             <h4>Bin packing problem:</h4>
             <p align="left">
-              This is for solving the 1D <a href="https://en.wikipedia.org/wiki/Bin_packing_problem" target=blank>bin packing problem</a>. The problem statement is: there is a list of 
-              <span style="font-family: courier; font-weight: bold; font-style: italic">N</span> 
-              numbers, representing the widths of 
-              <span style="font-family: courier; font-weight: bold; font-style: italic">N</span> 
-              different objects, ecah with width of 
-              <span style="font-family: courier; font-weight: bold; font-style: italic">N<sub>i</sub></span>. The goal is to fit all these 
-              <span style="font-family: courier; font-weight: bold; font-style: italic">N</span> objects to 
-              <span style="font-family: courier; font-weight: bold; font-style: italic">M</span> bins with fixed width of 
-              <span style="font-family: courier; font-weight: bold; font-style: italic">W</span>. 
-              <span style="font-family: courier; font-weight: bold; font-style: italic">W</span> is larger than the largest value of 
+              This is for solving the 1D <a href="https://en.wikipedia.org/wiki/Bin_packing_problem" target=blank>bin packing problem</a>. The problem statement is: there is a list of
+              <span style="font-family: courier; font-weight: bold; font-style: italic">N</span>
+              numbers, representing the widths of
+              <span style="font-family: courier; font-weight: bold; font-style: italic">N</span>
+              different objects, ecah with width of
+              <span style="font-family: courier; font-weight: bold; font-style: italic">N<sub>i</sub></span>. The goal is to fit all these
+              <span style="font-family: courier; font-weight: bold; font-style: italic">N</span> objects to
+              <span style="font-family: courier; font-weight: bold; font-style: italic">M</span> bins with fixed width of
+              <span style="font-family: courier; font-weight: bold; font-style: italic">W</span>.
+              <span style="font-family: courier; font-weight: bold; font-style: italic">W</span> is larger than the largest value of
               <span style="font-family: courier; font-weight: bold; font-style: italic">N<sub>i</sub></span>.
-              The goal is to find the minimal value of 
+              The goal is to find the minimal value of
               <span style="font-family: courier; font-weight: bold; font-style: italic">M</span>.<br></p>
           </div>
 
-            
-            
-            <div class="row">  
+
+
+            <div class="row">
             <div class="col-md-12">
               <p>The input widths are: {{nums}}.<br></p>
               <p>Width of the bin is {{W}}.<br></p>
@@ -137,8 +138,8 @@
                 {% for s in shelves1 %}
                 <tr><td>{{ s.items }}, </td></tr>
                 {% endfor %}<br></p>
-              {% if exhaustive %}  
-                {% if res2 %}                
+              {% if exhaustive %}
+                {% if res2 %}
                   <p><br>The number of shelves from exhaustive search is <strong>{{res2}}</strong>.<br></p>
                   <p>The shelves are:<br>
                     {% for s in shelves2 %}
@@ -179,10 +180,10 @@
       <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
       <script src="../../assets/js/ie10-viewport-bug-workaround.js"></script>
       <!--<script src="static/js/bootstrap.min.js"></script>-->
-      <script src="static/js/bootstrap.js"></script>  
+      <script src="static/js/bootstrap.js"></script>
       <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.4.1/js/bootstrap-datepicker.min.js"></script>
       <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.4.1/css/bootstrap-datepicker3.css"/>
-      
+
       <script>
       $(document).ready(function(){
       var date_input=$('input[name="date"]'); //our date input has the name "date"

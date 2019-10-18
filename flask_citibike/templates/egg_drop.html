@@ -109,58 +109,27 @@
           <div class="col-md-8">
           <div class="starter-template">
             <br><br>
-            <h4>Bin packing problem:</h4>
+            <h4>Egg drop problem:</h4>
             <p align="left">
-              This is for solving the 1D <a href="https://en.wikipedia.org/wiki/Bin_packing_problem" target=blank>bin packing problem</a>. The problem statement is: there is a list of
-              <span style="font-family: courier; font-weight: bold; font-style: italic">N</span>
-              numbers, representing the widths of
-              <span style="font-family: courier; font-weight: bold; font-style: italic">N</span>
-              different objects, ecah with width of
-              <span style="font-family: courier; font-weight: bold; font-style: italic">N<sub>i</sub></span>. The goal is to fit all these
-              <span style="font-family: courier; font-weight: bold; font-style: italic">N</span> objects to
-              <span style="font-family: courier; font-weight: bold; font-style: italic">M</span> bins with fixed width of
-              <span style="font-family: courier; font-weight: bold; font-style: italic">W</span>.
-              <span style="font-family: courier; font-weight: bold; font-style: italic">W</span> is larger than the largest value of
-              <span style="font-family: courier; font-weight: bold; font-style: italic">N<sub>i</sub></span>.
-              The goal is to find the minimal value of
-              <span style="font-family: courier; font-weight: bold; font-style: italic">M</span>.<br>
-              <br>
-              I will use both First Fit Decrease algorithm and exhaustive search to get the result. Please note that for First Fit Decrease algorithm, the time complexity is
-              <span style="font-family: courier; font-weight: bold; font-style: italic">O(N <span style='font-style:normal'>log</span>N)</span>.
-              But for exhaustive search, the time complexity is
-              <span style="font-family: courier; font-weight: bold; font-style: italic">O(N!)</span>.
-              For
-              <span style="font-family: courier; font-weight: bold; font-style: italic">N</span>
-              = 10, it will take about 20 seconds to finish. Therefore, we will ignore exhaustive search with
-              <span style="font-family: courier; font-weight: bold; font-style: italic">N</span>
-              > 10.
-              <br><br>
-              For the sake of simplicit, we will limit ourselves to integer cases.
+              This is for solving the <a href="https://changyaochen.github.io/egg-drop-problem/" target=blank>egg drop problem</a>. The setting is very simple: you have <span style="font-family: courier; font-weight: bold; font-style: italic">e</span> eggs, and a building with <span style="font-family: courier; font-weight: bold; font-style: italic">n</span> floors. You want to find out what is the highest floor to drop an egg without breaking it. In addition, you want to obtain the answer with as little attempts as possible, even for the worst-case scenario. Then, what is the minimal number of drops one needs?
             </p>
           </div>
 
-            <form  action="/bin_packing_output" method="POST">
+            <form  action="/egg_drop_output" method="POST">
             <div class="row">
             <div class="col-md-12 form-group row">
                 <div = class="col-md-12">
-                  <label for="nums">List of widths, seperated by comma:</label>
+                  <label for="nums">Number of floors:</label>
                   <br>
-                  <input class="col-md-12" type="text" id="nums" name='nums' placeholder="e.g. 1,2,2,3,6,7,9" style="font-size:11pt;">
+                  <input class="col-md-5" type="text" id="floor" name='floors' placeholder="e.g. 100" style="font-size:11pt;">
                   <br><br>
-                  <label for="width">Width of the bin, <span style="font-family: courier; font-weight: bold; font-style: italic">W</span> :</label>
+                  <label for="width">Number of eggs:</label>
                   <br>
-                  <input class="col-md-5" type="text" id="bin" name='bin' placeholder="e.g. 10" style="font-size:11pt;">
-                  <br><br>
-                  <input class="form-check-input" type="checkbox" id="exhaustive" name="exhaustive" value="exhaustive">
-                  Exhaustive search </label>
+                  <input class="col-md-5" type="text" id="eggs" name='eggs' placeholder="e.g. 3" style="font-size:11pt;">
                   <br><br>
                   <div><button type="submit" class="btn btn-success btn-lg">Submit</button></div>
                   </form>
                   </div>
-
-
-
-
                     <script src="static/js/bootstrap.min.js"></script>
                     <script src="https://code.jquery.com/jquery-1.10.2.min.js"></script>
 

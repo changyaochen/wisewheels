@@ -15,7 +15,7 @@ from bokeh.models import (
     GMapPlot, GMapOptions, ColumnDataSource, Circle, PanTool,
     WheelZoomTool, BoxSelectTool, Range1d
 )
-from config import google_map_api_key
+from .config import google_map_api_key
 
 
 def plot_income_pop(output='income'):

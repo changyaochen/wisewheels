@@ -58,6 +58,8 @@ class Trials:
     """Runs multiple trails of the simulation.
     """
     def __init__(self, n_trials: int = 100, **kwargs):
+        """Setting a single trial.
+        """
         self.n_trials = n_trials
         self.n_jobs = kwargs.get('n_jobs', 10)
         self.threshold = kwargs.get('threshold', 100)
@@ -73,6 +75,8 @@ class Trials:
         return S.evaluate()
 
     def run(self):
+        """Runs all trials in mp fashion.
+        """
         self.results = Pool(self.n_jobs).map(
             self.single_run,
             range(self.n_trials))
@@ -80,13 +84,14 @@ class Trials:
 
 if __name__ == '__main__':
 
-    n_trials = 1000
+    n_trials = 10000
     n_candidates = 1000
     threshold = 0.37
 
     T = Trials(n_trials=n_trials,
               n_candidates=n_candidates,
-              threshold=threshold)
+              threshold=threshold,
+              n_jobs=12)
     T.run()
 
     print("With {0} as the look-then-leap threshold, the chance to get the"

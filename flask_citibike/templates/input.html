@@ -95,10 +95,11 @@
                   <span class="caret"></span></a>
                   <ul class="dropdown-menu">
                     <li><a href="{{ url_for('bin_packing_input') }}">Bin packing</a></li>
+                    <li><a href="{{ url_for('egg_drop_input') }}">Egg drop problem</a></li>
                   </ul>
                 </li>
                 <!-- end of dropdown navbar -->
-                
+
               </ul>
             </div><!--/.nav-collapse -->
           </div>
@@ -117,8 +118,8 @@
 
           <div class = "container">
             <form  action="/output" method="POST">
-            
-            <div class="row">  
+
+            <div class="row">
             <div class="col-md-3">
               <div class="form-group">
                 <label for="user_age">Rider's Age:</label>
@@ -141,7 +142,7 @@
             </div>
 
 
-                
+
               <div class="form-group">
                 <label for="start_station">Start station:</label>
                 <select class="form-control" id="start_station" name="start_station" style="width:auto">
@@ -158,7 +159,7 @@
                     <!--class="form-control"-->
                     <input id="date" name="date" placeholder="MM/DD/YYY" type="text" />
                   </div>
-                      
+
 
                   <div class="form-group">
                     <label for="hour">Pick up time, please round to the closest hour:</label>
@@ -186,9 +187,9 @@
                       <option value="20">20</option>
                       <option value="21">21</option>
                       <option value="22">22</option>
-                      <option value="23">23</option>                      
+                      <option value="23">23</option>
                     </select>
-                  </div> 
+                  </div>
 
                   <div class="row">
                   <div class="col-md-3">
@@ -247,10 +248,10 @@
       <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
       <script src="../../assets/js/ie10-viewport-bug-workaround.js"></script>
       <!--<script src="static/js/bootstrap.min.js"></script>-->
-      <script src="static/js/bootstrap.js"></script>  
+      <script src="static/js/bootstrap.js"></script>
       <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.4.1/js/bootstrap-datepicker.min.js"></script>
       <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.4.1/css/bootstrap-datepicker3.css"/>
-      
+
       <script>
       $(document).ready(function(){
       var date_input=$('input[name="date"]'); //our date input has the name "date"

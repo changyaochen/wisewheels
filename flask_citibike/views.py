@@ -8,7 +8,9 @@ import os
 import codecs
 import logging
 import pandas as pd
+from datetime import datetime
 from flask import render_template, request
+from .egg_drop_problem import EggDrop
 
 # from bokeh.plotting import figure
 # from bokeh.embed import components
@@ -235,3 +237,20 @@ def bin_packing_output():
                            shelves1=shelves1,
                            shelves2=shelves2,
                            exhaustive=exhaustive)
+
+
+@app.route('/egg_drop', methods=['get', 'post'])
+def egg_drop_input():
+    return render_template("egg_drop.html")
+
+
+@app.route('/egg_drop_output', methods=['get', 'post'])
+def egg_drop_output():
+    n = request.form['floors'] or 100
+    e = request.form['eggs'] or 3
+    E = EggDrop(n=int(n), e=int(e))
+    result = E.run()
+    return render_template("egg_drop_output.html",
+                           floors=n,
+                           eggs=e,
+                           result=result)
