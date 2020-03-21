@@ -112,7 +112,7 @@
       <br><br>
       <h4>Multi armed bandit</h4>
       <p align="left">
-        This is to simulate a single run for multi-armed bandit problem in a 10-arm test bed, where each arm is a Gaussian distribution with variance of 1. The mean of each arm, is drawn from a standard Normal distribution. See the details of the testbed <a href="https://changyaochen.github.io/multi-armed-bandit-mar-2020/">here</a>.<br>
+        This is to simulate a single run for multi-armed bandit problem in a 10-arm test bed, where each arm is a Gaussian distribution with variance of 1. The mean of each arm, is drawn from a standard Normal distribution. See the details of the testbed <a href="https://changyaochen.github.io/multi-armed-bandit-mar-2020/">here</a>.<br><br>
 
         Below we will use three different policies, namely, greedy, &epsilon;-greedy, and upper confidence bound (UCB).
       </p>
@@ -132,7 +132,11 @@
             <br><br>
             <label for="num_steps">Number of steps:</label>
             <br>
-            <input class="col-md-5" type="text" id="num_steps" name='num_steps' placeholder="e.g. 1000" style="font-size:11pt;">
+            <input class="col-md-5" type="text" id="num_steps" name='num_steps' placeholder="e.g. 200" style="font-size:11pt;">
+            <br><br>
+            <label for="num_sim">Number of simulations:</label>
+            <br>
+            <input class="col-md-5" type="text" id="num_sim" name='num_sim' placeholder="e.g. 10, limited to 20" style="font-size:11pt;">
             <br><br>
             <div><button type="submit" class="btn btn-success btn-lg">Submit</button></div>
             </form>

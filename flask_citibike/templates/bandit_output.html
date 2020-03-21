@@ -70,14 +70,14 @@
         <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
         <![endif]-->
   <link
-      href="http://cdn.pydata.org/bokeh/release/bokeh-2.0.0.min.css"
+      href="http://cdn.pydata.org/bokeh/release/bokeh-1.1.0.min.css"
       rel="stylesheet" type="text/css">
   <link
-      href="http://cdn.pydata.org/bokeh/release/bokeh-widgets-2.0.0.min.css"
+      href="http://cdn.pydata.org/bokeh/release/bokeh-widgets-1.1.0.min.css"
       rel="stylesheet" type="text/css">
 
-  <script src="http://cdn.pydata.org/bokeh/release/bokeh-2.0.0.min.js"></script>
-  <script src="http://cdn.pydata.org/bokeh/release/bokeh-widgets-2.0.0.min.js"></script>
+  <script src="http://cdn.pydata.org/bokeh/release/bokeh-1.1.0.min.js"></script>
+  <script src="http://cdn.pydata.org/bokeh/release/bokeh-widgets-1.1.0.min.js"></script>
 </head>
 
       <body>
@@ -129,9 +129,9 @@
 
             <div class="row">
             <div class="col-md-12">
-              <p>Result (simulations took {{duration_in_second}} seconds):</p>
               {{ script|safe }}
               {{ div|safe }}
+            <p>Simulations took {{duration_in_second}} seconds.</p>
             </div>
 
             </div>

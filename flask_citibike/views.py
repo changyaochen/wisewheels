@@ -272,16 +272,31 @@ def bandit_input():
 @app.route('/bandit_output', methods=['get', 'post'])
 def bandit_output():
     """Run one simulation."""
-    epsilon = request.form['epsilon'] or 0.1
-    ucb_c = request.form['ucb_c'] or 2
-    num_steps = request.form['num_steps'] or 1000
+    try:
+        epsilon = float(request.form['epsilon'])
+        epsilon = min(max(0, epsilon), 1 - 1e-5)
+    except ValueError:
+        epsilon = 0.1
+    try:
+        ucb_c = float(request.form['ucb_c'])
+        ucb_c = min(max(0, ucb_c), 1000)
+    except ValueError:
+        ucb_c = 2
+    try:
+        num_steps = min(1000, int(request.form['num_steps']))
+    except ValueError:
+        num_steps = 200
+    try:
+        num_sim = min(50, int(request.form['num_sim']))
+    except ValueError:
+        num_sim = 20
 
     start_time = time.time()
     random_seed = int(1000 * start_time)
     simulation_greedy = Simulation(
         env_type=TestBed,
         agent_type=GreedyAgent,
-        num_agents=1,
+        num_agents=num_sim,
         init_value=None,
         step=num_steps,
         env_kwargs={'num_arms': 10, 'random_seed': random_seed},
@@ -294,7 +309,7 @@ def bandit_output():
     simulation_eps_greedy = Simulation(
         env_type=TestBed,
         agent_type=EpsilonGreedyAgent,
-        num_agents=1,
+        num_agents=num_sim,
         init_value=None,
         step=num_steps,
         env_kwargs={'num_arms': 10, 'random_seed': random_seed},
@@ -307,7 +322,7 @@ def bandit_output():
     simulation_ucb = Simulation(
         env_type=TestBed,
         agent_type=UCBAgent,
-        num_agents=1,
+        num_agents=num_sim,
         init_value=None,
         step=num_steps,
         env_kwargs={'num_arms': 10, 'random_seed': random_seed},
@@ -329,6 +344,8 @@ def bandit_output():
         steps_ucb=steps_ucb,
         avg_rewards_ucb=avg_rewards_ucb,
         ucb_c=ucb_c)
+    # Set title
+    fig.title.text = f'Results from {num_sim} simulations'
     script, div = components(fig)
 
     return render_template(
@@ -348,27 +365,34 @@ def plot_bandit_results(
         avg_rewards_ucb: List,
         ucb_c: float):
     """Plot bandit results from different policies."""
-    fig = figure(plot_width=400, plot_height=400)
+    fig = figure(plot_width=600, plot_height=400)
 
     _ = fig.line(
         x=steps_greedy,
         y=avg_rewards_greedy,
-        # label='Greedy',
+        line_alpha=0.3,
+        line_color='blue',
+        legend='Greedy',
     )
     _ = fig.line(
         x=steps_eps_greedy,
         y=avg_rewards_eps_greedy,
-        # label=f'$\epsilon$-Greedy, $\epsilon$={epsilon}',
+        line_alpha=0.3,
+        line_color='red',
+        legend=f'epsilon-Greedy, epsilon = {epsilon}',
     )
     _ = fig.line(
         x=steps_ucb,
         y=avg_rewards_ucb,
-        # label=f'UCB, c={ucb_c}',
+        line_alpha=0.3,
+        line_color='#35B778',
+        legend=f'UCB, c = {ucb_c}',
     )
     # Set the x axis label
     fig.xaxis.axis_label = 'Step'
-
     # Set the y axis label
-    fig.yaxis.axis_label = 'Reward'
+    fig.yaxis.axis_label = 'Averaged reward'
+    fig.legend.location = 'bottom_right'
+    fig.sizing_mode = "scale_both"
 
     return fig
