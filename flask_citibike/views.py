@@ -1,16 +1,24 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-"""
-Created on Wed Jun  7 12:04:28 2017
+"""Created on Wed Jun  7 12:04:2k8 2017.
+
 @author: changyaochen
 """
+import io
 import os
+import time
 import codecs
 import logging
 import pandas as pd
+
+from typing import List
 from datetime import datetime
+from bokeh.plotting import figure
+from bokeh.embed import components
 from flask import render_template, request
 from .egg_drop_problem import EggDrop
+from .multi_armed_bandit import (
+    TestBed, GreedyAgent, EpsilonGreedyAgent, UCBAgent, Simulation)
 
 # from bokeh.plotting import figure
 # from bokeh.embed import components
@@ -254,3 +262,137 @@ def egg_drop_output():
                            floors=n,
                            eggs=e,
                            result=result)
+
+
+@app.route('/bandit', methods=['get', 'post'])
+def bandit_input():
+    return render_template("bandit.html")
+
+
+@app.route('/bandit_output', methods=['get', 'post'])
+def bandit_output():
+    """Run one simulation."""
+    try:
+        epsilon = float(request.form['epsilon'])
+        epsilon = min(max(0, epsilon), 1 - 1e-5)
+    except ValueError:
+        epsilon = 0.1
+    try:
+        ucb_c = float(request.form['ucb_c'])
+        ucb_c = min(max(0, ucb_c), 1000)
+    except ValueError:
+        ucb_c = 2
+    try:
+        num_steps = min(1000, int(request.form['num_steps']))
+    except ValueError:
+        num_steps = 200
+    try:
+        num_sim = min(50, int(request.form['num_sim']))
+    except ValueError:
+        num_sim = 20
+
+    start_time = time.time()
+    random_seed = int(1000 * start_time)
+    simulation_greedy = Simulation(
+        env_type=TestBed,
+        agent_type=GreedyAgent,
+        num_agents=num_sim,
+        init_value=None,
+        step=num_steps,
+        env_kwargs={'num_arms': 10, 'random_seed': random_seed},
+    )
+
+    simulation_greedy.run_all_agents()
+    steps_greedy, avg_rewards_greedy = simulation_greedy.aggregate_rewards(
+        make_plot=False)
+
+    simulation_eps_greedy = Simulation(
+        env_type=TestBed,
+        agent_type=EpsilonGreedyAgent,
+        num_agents=num_sim,
+        init_value=None,
+        step=num_steps,
+        env_kwargs={'num_arms': 10, 'random_seed': random_seed},
+        agent_kwargs={'epsilon': epsilon},
+    )
+    simulation_eps_greedy.run_all_agents()
+    steps_eps_greedy, avg_rewards_eps_greedy = \
+        simulation_eps_greedy.aggregate_rewards(make_plot=False)
+
+    simulation_ucb = Simulation(
+        env_type=TestBed,
+        agent_type=UCBAgent,
+        num_agents=num_sim,
+        init_value=None,
+        step=num_steps,
+        env_kwargs={'num_arms': 10, 'random_seed': random_seed},
+        agent_kwargs={'c': ucb_c},
+    )
+
+    simulation_ucb.run_all_agents()
+    steps_ucb, avg_rewards_ucb = simulation_ucb.aggregate_rewards(
+        make_plot=False)
+
+    duration_in_second = '{:5.3f}'.format(time.time() - start_time)
+
+    fig = plot_bandit_results(
+        steps_greedy=steps_greedy,
+        avg_rewards_greedy=avg_rewards_greedy,
+        steps_eps_greedy=steps_eps_greedy,
+        avg_rewards_eps_greedy=avg_rewards_eps_greedy,
+        epsilon=epsilon,
+        steps_ucb=steps_ucb,
+        avg_rewards_ucb=avg_rewards_ucb,
+        ucb_c=ucb_c)
+    # Set title
+    fig.title.text = f'Results from {num_sim} simulations'
+    script, div = components(fig)
+
+    return render_template(
+        "bandit_output.html",
+        duration_in_second=duration_in_second,
+        script=script,
+        div=div)
+
+
+def plot_bandit_results(
+        steps_greedy: List,
+        avg_rewards_greedy: List,
+        steps_eps_greedy: List,
+        avg_rewards_eps_greedy: List,
+        epsilon: float,
+        steps_ucb: List,
+        avg_rewards_ucb: List,
+        ucb_c: float):
+    """Plot bandit results from different policies."""
+    fig = figure(plot_width=600, plot_height=400)
+
+    _ = fig.line(
+        x=steps_greedy,
+        y=avg_rewards_greedy,
+        line_alpha=0.3,
+        line_color='blue',
+        legend='Greedy',
+    )
+    _ = fig.line(
+        x=steps_eps_greedy,
+        y=avg_rewards_eps_greedy,
+        line_alpha=0.3,
+        line_color='red',
+        legend=f'epsilon-Greedy, epsilon = {epsilon}',
+    )
+    _ = fig.line(
+        x=steps_ucb,
+        y=avg_rewards_ucb,
+        line_alpha=0.3,
+        line_color='#35B778',
+        legend=f'UCB, c = {ucb_c}',
+    )
+    # Set the x axis label
+    fig.xaxis.axis_label = 'Step'
+    # Set the y axis label
+    fig.yaxis.axis_label = 'Averaged reward'
+    fig.legend.location = 'bottom_right'
+    fig.sizing_mode = "scale_both"
+
+    return fig
