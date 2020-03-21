@@ -350,7 +350,10 @@ def bandit_output():
 
     output = io.BytesIO()
     FigureCanvas(fig).print_png(output)
+
     result_img_url = 'static/images/bandit.png'
+    if not os.path.exists(result_img_url):
+        os.makedirs('/'.join(result_img_url.split('/')[:-1]))
     plt.savefig(result_img_url)
 
     return render_template(
