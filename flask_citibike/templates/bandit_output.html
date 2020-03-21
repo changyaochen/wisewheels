@@ -69,7 +69,16 @@
         <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
         <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
         <![endif]-->
-      </head>
+  <link
+      href="http://cdn.pydata.org/bokeh/release/bokeh-2.0.0.min.css"
+      rel="stylesheet" type="text/css">
+  <link
+      href="http://cdn.pydata.org/bokeh/release/bokeh-widgets-2.0.0.min.css"
+      rel="stylesheet" type="text/css">
+
+  <script src="http://cdn.pydata.org/bokeh/release/bokeh-2.0.0.min.js"></script>
+  <script src="http://cdn.pydata.org/bokeh/release/bokeh-widgets-2.0.0.min.js"></script>
+</head>
 
       <body>
 
@@ -121,7 +130,8 @@
             <div class="row">
             <div class="col-md-12">
               <p>Result (simulations took {{duration_in_second}} seconds):</p>
-              <img src={{result_img_url}} alt="Chart" height="auto" width="100%">
+              {{ script|safe }}
+              {{ div|safe }}
             </div>
 
             </div>

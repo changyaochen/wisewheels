@@ -10,13 +10,12 @@ import time
 import codecs
 import logging
 import pandas as pd
-import seaborn as sns
-import matplotlib.pyplot as plt
 
+from typing import List
 from datetime import datetime
+from bokeh.plotting import figure
+from bokeh.embed import components
 from flask import render_template, request
-from matplotlib.figure import Figure
-from matplotlib.backends.backend_agg import FigureCanvasAgg as FigureCanvas
 from .egg_drop_problem import EggDrop
 from .multi_armed_bandit import (
     TestBed, GreedyAgent, EpsilonGreedyAgent, UCBAgent, Simulation)
@@ -321,42 +320,55 @@ def bandit_output():
 
     duration_in_second = '{:5.3f}'.format(time.time() - start_time)
 
-    # make plots
-    fig = Figure()
-    ax = fig.add_subplot(1, 1, 1)
-    sns.set(font_scale=1.2)
-    sns.set_style("whitegrid", {'grid.linestyle': '--'})
-    _ = sns.lineplot(
-        x=steps_greedy,
-        y=avg_rewards_greedy,
-        label='Greedy',
-        ax=ax,
-    )
-    _ = sns.lineplot(
-        x=steps_eps_greedy,
-        y=avg_rewards_eps_greedy,
-        label=f'$\epsilon$-Greedy, $\epsilon$={epsilon}',
-        ax=ax,
-    )
-    _ = sns.lineplot(
-        x=steps_ucb,
-        y=avg_rewards_ucb,
-        label=f'UCB, c={ucb_c}',
-        ax=ax,
-    )
-    ax.set_xlabel('Step')
-    ax.set_ylabel('Reward')
-    ax.set_title(f'Result from 1 simulation for each policy.')
-
-    output = io.BytesIO()
-    FigureCanvas(fig).print_png(output)
-
-    result_img_url = 'static/images/bandit.png'
-    if not os.path.exists(result_img_url):
-        os.makedirs('/'.join(result_img_url.split('/')[:-1]))
-    plt.savefig(result_img_url)
+    fig = plot_bandit_results(
+        steps_greedy=steps_greedy,
+        avg_rewards_greedy=avg_rewards_greedy,
+        steps_eps_greedy=steps_eps_greedy,
+        avg_rewards_eps_greedy=avg_rewards_eps_greedy,
+        epsilon=epsilon,
+        steps_ucb=steps_ucb,
+        avg_rewards_ucb=avg_rewards_ucb,
+        ucb_c=ucb_c)
+    script, div = components(fig)
 
     return render_template(
         "bandit_output.html",
         duration_in_second=duration_in_second,
-        result_img_url=result_img_url)
+        script=script,
+        div=div)
+
+
+def plot_bandit_results(
+        steps_greedy: List,
+        avg_rewards_greedy: List,
+        steps_eps_greedy: List,
+        avg_rewards_eps_greedy: List,
+        epsilon: float,
+        steps_ucb: List,
+        avg_rewards_ucb: List,
+        ucb_c: float):
+    """Plot bandit results from different policies."""
+    fig = figure(plot_width=400, plot_height=400)
+
+    _ = fig.line(
+        x=steps_greedy,
+        y=avg_rewards_greedy,
+        # label='Greedy',
+    )
+    _ = fig.line(
+        x=steps_eps_greedy,
+        y=avg_rewards_eps_greedy,
+        # label=f'$\epsilon$-Greedy, $\epsilon$={epsilon}',
+    )
+    _ = fig.line(
+        x=steps_ucb,
+        y=avg_rewards_ucb,
+        # label=f'UCB, c={ucb_c}',
+    )
+    # Set the x axis label
+    fig.xaxis.axis_label = 'Step'
+
+    # Set the y axis label
+    fig.yaxis.axis_label = 'Reward'
+
+    return fig
