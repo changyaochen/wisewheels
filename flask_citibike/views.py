@@ -1,16 +1,25 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-"""
-Created on Wed Jun  7 12:04:28 2017
+"""Created on Wed Jun  7 12:04:2k8 2017.
+
 @author: changyaochen
 """
+import io
 import os
+import time
 import codecs
 import logging
 import pandas as pd
+import seaborn as sns
+import matplotlib.pyplot as plt
+
 from datetime import datetime
 from flask import render_template, request
+from matplotlib.figure import Figure
+from matplotlib.backends.backend_agg import FigureCanvasAgg as FigureCanvas
 from .egg_drop_problem import EggDrop
+from .multi_armed_bandit import (
+    TestBed, GreedyAgent, EpsilonGreedyAgent, UCBAgent, Simulation)
 
 # from bokeh.plotting import figure
 # from bokeh.embed import components
@@ -254,3 +263,97 @@ def egg_drop_output():
                            floors=n,
                            eggs=e,
                            result=result)
+
+
+@app.route('/bandit', methods=['get', 'post'])
+def bandit_input():
+    return render_template("bandit.html")
+
+
+@app.route('/bandit_output', methods=['get', 'post'])
+def bandit_output():
+    """Run one simulation."""
+    epsilon = request.form['epsilon'] or 0.1
+    ucb_c = request.form['ucb_c'] or 2
+    num_steps = request.form['num_steps'] or 1000
+
+    start_time = time.time()
+    random_seed = int(1000 * start_time)
+    simulation_greedy = Simulation(
+        env_type=TestBed,
+        agent_type=GreedyAgent,
+        num_agents=1,
+        init_value=None,
+        step=num_steps,
+        env_kwargs={'num_arms': 10, 'random_seed': random_seed},
+    )
+
+    simulation_greedy.run_all_agents()
+    steps_greedy, avg_rewards_greedy = simulation_greedy.aggregate_rewards(
+        make_plot=False)
+
+    simulation_eps_greedy = Simulation(
+        env_type=TestBed,
+        agent_type=EpsilonGreedyAgent,
+        num_agents=1,
+        init_value=None,
+        step=num_steps,
+        env_kwargs={'num_arms': 10, 'random_seed': random_seed},
+        agent_kwargs={'epsilon': epsilon},
+    )
+    simulation_eps_greedy.run_all_agents()
+    steps_eps_greedy, avg_rewards_eps_greedy = \
+        simulation_eps_greedy.aggregate_rewards(make_plot=False)
+
+    simulation_ucb = Simulation(
+        env_type=TestBed,
+        agent_type=UCBAgent,
+        num_agents=1,
+        init_value=None,
+        step=num_steps,
+        env_kwargs={'num_arms': 10, 'random_seed': random_seed},
+        agent_kwargs={'c': ucb_c},
+    )
+
+    simulation_ucb.run_all_agents()
+    steps_ucb, avg_rewards_ucb = simulation_ucb.aggregate_rewards(
+        make_plot=False)
+
+    duration_in_second = '{:5.3f}'.format(time.time() - start_time)
+
+    # make plots
+    fig = Figure()
+    ax = fig.add_subplot(1, 1, 1)
+    sns.set(font_scale=1.2)
+    sns.set_style("whitegrid", {'grid.linestyle': '--'})
+    _ = sns.lineplot(
+        x=steps_greedy,
+        y=avg_rewards_greedy,
+        label='Greedy',
+        ax=ax,
+    )
+    _ = sns.lineplot(
+        x=steps_eps_greedy,
+        y=avg_rewards_eps_greedy,
+        label=f'$\epsilon$-Greedy, $\epsilon$={epsilon}',
+        ax=ax,
+    )
+    _ = sns.lineplot(
+        x=steps_ucb,
+        y=avg_rewards_ucb,
+        label=f'UCB, c={ucb_c}',
+        ax=ax,
+    )
+    ax.set_xlabel('Step')
+    ax.set_ylabel('Reward')
+    ax.set_title(f'Result from 1 simulation for each policy.')
+
+    output = io.BytesIO()
+    FigureCanvas(fig).print_png(output)
+    result_img_url = 'static/images/bandit.png'
+    plt.savefig(result_img_url)
+
+    return render_template(
+        "bandit_output.html",
+        duration_in_second=duration_in_second,
+        result_img_url=result_img_url)
