@@ -111,33 +111,33 @@
     <div class="col-md-8">
     <div class="starter-template">
       <br><br>
-      <h4>Multi armed bandit</h4>
+      <h4>SIR model simulation</h4>
       <p align="left">
-        This is to simulate a single run for multi-armed bandit problem in a 10-arm test bed, where each arm is a Gaussian distribution with variance of 1. The mean of each arm, is drawn from a standard Normal distribution. See the details of the testbed <a href="https://changyaochen.github.io/multi-armed-bandit-mar-2020/">here</a>. The python code for simulation is <a href="https://github.com/changyaochen/changyaochen.github.io/blob/master/assets/notebooks/multi_armed_bandit.py">here</a>.<br><br>
+        This is to simulate the results based on a <a href="https://en.wikipedia.org/wiki/Compartmental_models_in_epidemiology#The_SIR_model">SIR model</a> For the details of the specific model, please check the blog post <a href="https://changyaochen.github.io">here</a>.<br><br>
 
-        Below we will use three different policies, namely, greedy, &epsilon;-greedy, and upper confidence bound (UCB).
+        Paramters for the simulation:<br>
       </p>
     </div>
 
-      <form  action="/bandit_output" method="POST">
+      <form  action="/sir_output" method="POST">
       <div class="row">
       <div class="col-md-12 form-group row">
           <div = class="col-md-12">
-            <label for="epsilon">&epsilon; for &epsilon;-greedy:</label>
+            <label for="r0">Basic reproduction number (R0):</label>
             <br>
-            <input class="col-md-5" type="text" id="epsilon" name='epsilon' placeholder="e.g. 0.1" style="font-size:11pt;">
+            <input class="col-md-5" type="text" id="r0" name='r0' placeholder="e.g. 2" style="font-size:11pt;">
             <br><br>
-            <label for="ucb_c">c (for upper confidence bound):</label>
+            <label for="c">Average days for recovery:</label>
             <br>
-            <input class="col-md-5" type="text" id="ucb_c" name='ucb_c' placeholder="e.g. 2" style="font-size:11pt;">
+            <input class="col-md-5" type="text" id="c" name='c' placeholder="e.g. 14" style="font-size:11pt;">
             <br><br>
-            <label for="num_steps">Number of steps:</label>
+            <label for="eta">Fatality rate:</label>
             <br>
-            <input class="col-md-5" type="text" id="num_steps" name='num_steps' placeholder="e.g. 200" style="font-size:11pt;">
+            <input class="col-md-5" type="text" id="eta" name='eta' placeholder="e.g. 0.03" style="font-size:11pt;">
             <br><br>
-            <label for="num_sim">Number of simulations:</label>
+            <label for="i">Initial proportion of infectious people:</label>
             <br>
-            <input class="col-md-5" type="text" id="num_sim" name='num_sim' placeholder="e.g. 10, limited to 20" style="font-size:11pt;">
+            <input class="col-md-5" type="text" id="i" name='i' placeholder="e.g. 0.1" style="font-size:11pt;">
             <br><br>
             <div><button type="submit" class="btn btn-success btn-lg">Submit</button></div>
             </form>
