@@ -15,10 +15,13 @@ from typing import List
 from datetime import datetime
 from bokeh.plotting import figure
 from bokeh.embed import components
+from bokeh.core.properties import value
+from bokeh.models import ColumnDataSource, HoverTool
 from flask import render_template, request
 from .egg_drop_problem import EggDrop
 from .multi_armed_bandit import (
     TestBed, GreedyAgent, EpsilonGreedyAgent, UCBAgent, Simulation)
+from .sir_model import SIR
 
 # from bokeh.plotting import figure
 # from bokeh.embed import components
@@ -393,6 +396,141 @@ def plot_bandit_results(
     # Set the y axis label
     fig.yaxis.axis_label = 'Averaged reward'
     fig.legend.location = 'bottom_right'
+    fig.sizing_mode = "scale_both"
+
+    return fig
+
+
+@app.route('/sir', methods=['get', 'post'])
+def sir_input():
+    """Input for the SIR model."""
+    return render_template("sir.html")
+
+
+@app.route('/sir_output', methods=['get', 'post'])
+def sir_output():
+    """Run one SIR simulation."""
+    # parse the parameters
+    try:
+        r0 = float(request.form['r0'])
+    except ValueError:
+        r0 = 2.
+
+    try:
+        gamma = 1. / float(request.form['c'])
+    except ValueError:
+        gamma = 1. / 14
+
+    try:
+        eta = float(request.form['eta'])
+        eta = min(1., max(0., eta))
+    except ValueError:
+        eta = 0.03
+
+    try:
+        i_init = float(request.form['i'])
+        i_init = min(1., max(0., i_init))
+    except ValueError:
+        i_init = 0.1
+
+    beta = r0 * gamma
+    model = SIR(param={
+        'beta': beta,
+        'gamma': gamma,
+        'eta': eta})
+    model.run(
+        X_init=[1. - i_init, i_init, 0, 0],
+        num_steps=120)
+
+    # make plot
+    fig = plot_sir_results(model.X)
+    # Set title
+    fig.title.text = f'Results of SIR model simulations'
+    script, div = components(fig)
+
+    return render_template(
+        "sir_output.html",
+        script=script,
+        div=div)
+
+
+def plot_sir_results(X):
+    """Plot SIR results."""
+    # unpack the results
+    S, I, R, D = X
+    time_steps = list(range((len(S))))
+
+    source = ColumnDataSource(data={
+        'Day': time_steps,
+        'Susceptible': S,
+        'Infectious': I,
+        'Recovered': R,
+        'Dead': D})
+
+    fig = figure(plot_width=600, plot_height=400)
+
+    _ = fig.line(
+        x='Day',
+        y='Susceptible',
+        line_width=3,
+        line_alpha=0.3,
+        line_color='blue',
+        name='Susceptible',
+        legend=value('Susceptible'),
+        source=source,
+    )
+
+    _ = fig.line(
+        x='Day',
+        y='Infectious',
+        line_width=3,
+        line_alpha=0.3,
+        line_color='darkorange',
+        name='Infectious',
+        legend=value('Infectious'),
+        source=source,
+    )
+
+    _ = fig.line(
+        x='Day',
+        y='Recovered',
+        line_width=3,
+        line_alpha=0.3,
+        line_color='green',
+        name='Recovered',
+        legend=value('Recovered'),
+        source=source,
+    )
+
+    _ = fig.line(
+        x='Day',
+        y='Dead',
+        line_width=3,
+        line_alpha=0.3,
+        line_color='red',
+        name='Dead',
+        legend=value('Dead'),
+        source=source,
+    )
+
+    # set the hover tip
+    fig.add_tools(HoverTool(
+        tooltips=[
+            ('Day', '@Day'),
+            ('Susceptible', '@Susceptible{%0.2f}'),
+            ('Infectious', '@Infectious{%0.2f}'),
+            ('Recovered', '@Recovered{%0.2f}'),
+            ('Dead', '@Dead{%0.2f}'),
+        ],
+        mode='vline',
+        names=['Infectious'])
+    )
+
+    # Set the x axis label
+    fig.xaxis.axis_label = 'Day'
+    # Set the y axis label
+    fig.yaxis.axis_label = 'Proportion of population'
+    fig.legend.location = 'top_right'
     fig.sizing_mode = "scale_both"
 
     return fig

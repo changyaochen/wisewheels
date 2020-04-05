@@ -45,7 +45,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
-  <meta name="description" content="Given the pickup event of a Citibike, this application will predict what is the most likely neighborhood the bike trip will end in.">
+  <meta name="description" content="Multi armed bandit problem.">
   <meta name="author" content="Changyao Chen">
   <link rel="icon" href="../../favicon.ico">
 
@@ -69,7 +69,16 @@
         <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
         <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
         <![endif]-->
-      </head>
+  <link
+      href="http://cdn.pydata.org/bokeh/release/bokeh-1.1.0.min.css"
+      rel="stylesheet" type="text/css">
+  <link
+      href="http://cdn.pydata.org/bokeh/release/bokeh-widgets-1.1.0.min.css"
+      rel="stylesheet" type="text/css">
+
+  <script src="http://cdn.pydata.org/bokeh/release/bokeh-1.1.0.min.js"></script>
+  <script src="http://cdn.pydata.org/bokeh/release/bokeh-widgets-1.1.0.min.js"></script>
+</head>
 
       <body>
 
@@ -97,7 +106,6 @@
                     <li><a href="{{ url_for('bin_packing_input') }}">Bin packing</a></li>
                     <li><a href="{{ url_for('egg_drop_input') }}">Egg drop problem</a></li>
                     <li><a href="{{ url_for('bandit_input') }}">Multi-armed bandit</a></li>
-                    <li><a href="{{ url_for('sir_input') }}">SIR model</a></li>
                   </ul>
                 </li>
                 <!-- end of dropdown navbar -->
@@ -111,32 +119,37 @@
           <div class="col-md-8">
           <div class="starter-template">
             <br><br>
-            <h4>Egg drop problem:</h4>
+            <h4>SIR model simulation</h4>
             <p align="left">
-              This is for solving the <a href="https://changyaochen.github.io/egg-drop-problem/" target=blank>egg drop problem</a>. The setting is very simple: you have <span style="font-family: courier; font-weight: bold; font-style: italic">e</span> eggs, and a building with <span style="font-family: courier; font-weight: bold; font-style: italic">n</span> floors. You want to find out what is the highest floor to drop an egg without breaking it. In addition, you want to obtain the answer with as little attempts as possible, even for the worst-case scenario. Then, what is the minimal number of drops one needs?
+              This is to simulate the results based on a <a href="https://en.wikipedia.org/wiki/Compartmental_models_in_epidemiology#The_SIR_model">SIR model</a> For the details of the specific model, please check the blog post <a href="https://changyaochen.github.io">here</a>.<br>
             </p>
           </div>
 
-            <form  action="/egg_drop_output" method="POST">
             <div class="row">
-            <div class="col-md-12 form-group row">
-                <div = class="col-md-12">
-                  <label for="nums">Number of floors:</label>
-                  <br>
-                  <input class="col-md-5" type="text" id="floor" name='floors' placeholder="e.g. 100" style="font-size:11pt;">
-                  <br><br>
-                  <label for="width">Number of eggs:</label>
-                  <br>
-                  <input class="col-md-5" type="text" id="eggs" name='eggs' placeholder="e.g. 3" style="font-size:11pt;">
-                  <br><br>
-                  <div><button type="submit" class="btn btn-success btn-lg">Submit</button></div>
+            <div class="col-md-12">
+              {{ script|safe }}
+              {{ div|safe }}
+            </div>
+
+            </div>
+
+                  <form  action="/sir" method="POST">
+                    <br>
+                  <div>
+                    <button type="submit" class="btn btn-success btn-lg">Back to input</button>
+                  </div>
                   </form>
                   </div>
+
+
+
+
                     <script src="static/js/bootstrap.min.js"></script>
                     <script src="https://code.jquery.com/jquery-1.10.2.min.js"></script>
 
                   </div>
                   </div> <!-- /.container-->
+      <br><br>
 
 
       <!-- Bootstrap core JavaScript
